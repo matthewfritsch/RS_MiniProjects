@@ -40,13 +40,13 @@ fn get_word() {
 }
 
 
-fn getWordEntries(word:String) : HashMap {
+fn getWordEntries(word:String) -> HashMap<char, Vec<u8>> {
     let mut entries = HashMap::new();
     let wordVec : Vec<char> = word.chars().collect();
-    for idx in (0..4){
+    for idx in 0..4{
         let letter = wordVec[idx];
         let idxVec = entries.entry(letter).or_insert(Vec::new() as Vec<u8>);
-        *idxVec.push(idx);
+        idxVec.push(idx as u8);
     }
     entries
 }
@@ -59,21 +59,25 @@ fn getWordEntries(word:String) : HashMap {
 //   "w" for wrong
 
 fn let_user_guess(guess:String, word:String) -> [char; 5]{
-    let results = [char; 5];
+    let results : [char; 5];
     let guessVec : Vec<char> = guess.chars().collect();
     //create hashmap of char : list<u8>
     //each char = an entry in the word;
     //each u8 = an idx;
-    let mut wordEntries = getWordEntries(word);
-
-    for guessLet in guessVec {
-        if wordEntries.entry(guessLet) &&  
-            //if letter in guess at same spot as letter in word
-                //add "c"
-            //else
-                //add "m"
-        //else add "w"
-    //return arr
+    let mut wordEntries : HashMap<char, Vec<u8>> = getWordEntries(word);
+    for idx in 0..4 {
+        let guessLet = &guessVec[idx];
+        results[idx] = 'w';
+        let idx8 = idx as u8;
+        if !wordEntries.get(guessLet).is_none() && wordEntries.get(guessLet).unwrap().contains(&idx8) {
+            results[idx] = 'c';
+            wordEntries.get(guessLet).unwrap().remove(idx);
+        }
+        else if !wordEntries.get(guessLet).is_none() {
+            results[idx] = 'm';
+        }
+    }
+    results
 }
 
 fn let_user_type_letter() -> char {
