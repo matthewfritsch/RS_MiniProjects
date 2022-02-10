@@ -76,8 +76,6 @@ fn let_user_guess(guess:String, word:String) -> [char; 5]{
 }
 */
 
-//TODO reimplement hashmap 
-
 // returns the string containing the user's guess
 fn let_user_guess() -> String {
     let mut x = String::new(); 
