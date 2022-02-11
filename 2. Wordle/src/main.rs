@@ -1,7 +1,10 @@
-extern crate termios;
+use colored::*;
 use std::io;
 use std::io::Read;
 use std::io::Write;
+use std::fs;
+use rand::prelude::Rng;
+
 //use std::collections::HashMap;
 
 use termios::{Termios, TCSANOW, ECHO, ICANON, tcsetattr};
@@ -9,8 +12,13 @@ use termios::{Termios, TCSANOW, ECHO, ICANON, tcsetattr};
 
 fn main() {
     print_help(); //show help dialogue
+    let filename = "words_fixed.txt".to_string();
+    let correct_word = get_word(filename);
+    println!("Hey... psst... the word is \'{}\'", correct_word);
     let user_guess = let_user_guess(); //let the user type in the letters
-    println!("{:?}", compare_user_guess(user_guess, "alpha".to_string())); //compare user guess to correct word
+    let comparison_results = compare_user_guess(&user_guess, &correct_word);
+    show_colorful_result(&user_guess, &comparison_results);
+    
 }
 
 fn print_help() {
@@ -25,14 +33,40 @@ fn print_help() {
 }
 
 // after the word has been entered, the colored results are displayed in terminal
-/*
-fn show_entry(){
+
+fn show_colorful_result(user_guess : &String, results : &[char; 5]) {
+    let guess_letters : Vec<char> = user_guess.chars().collect();
+    for idx in 0..5 {
+        let mut result = String::new();
+        if results[idx] == 'c' {print!("{}", guess_letters[idx].to_string().green());}
+        else if results[idx] == 'm' {print!("{}", guess_letters[idx].to_string().white());}
+        else {print!("{}", guess_letters[idx].to_string().red());}
+        print!("{}", "".to_string().normal());
+    }
+    println!();
+    
 }
 
 // fetch word from file
-fn get_word() {
+fn get_word(filename:String) -> String {
+    let file_contents = get_file_contents(filename);
+    let mut random_generator = rand::thread_rng();
+    let rand_word_idx = random_generator.gen::<usize>()%file_contents.len();
+    let word : & String = &file_contents[rand_word_idx];
+    word.to_string()
 }
-*/
+
+fn get_file_contents(filename:String) -> Vec<String> {
+    let contents = fs::read_to_string(filename)
+                    .expect("File error, could not fetch file contents");
+    let mut words : Vec<String> = Vec::new();
+    
+    for l in contents.lines() {
+        words.push(l.to_string());
+    }
+    words
+}
+
 /*
 fn get_word_entries(word:String) -> HashMap<char, Vec<u8>> {
      let mut entries = HashMap::new();
@@ -98,11 +132,10 @@ fn let_user_guess() -> String {
         io::stdout().flush().unwrap();
  
     }
-    println!();
     x
 }
 
-fn compare_user_guess(guess:String, word:String) -> [char; 5] {
+fn compare_user_guess(guess:&String, word:&String) -> [char; 5] {
 
     let mut results = [' '; 5];
     let guess_vec : Vec<char> = guess.chars().collect();
@@ -130,6 +163,7 @@ fn compare_user_guess(guess:String, word:String) -> [char; 5] {
             }
         }
     }
+    print!("\r");
     results
 }
 
