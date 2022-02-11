@@ -13,12 +13,22 @@ use termios::{Termios, TCSANOW, ECHO, ICANON, tcsetattr};
 fn main() {
     print_help(); //show help dialogue
     let filename = "words_fixed.txt".to_string();
-    let correct_word = get_word(filename);
-    println!("Hey... psst... the word is \'{}\'", correct_word);
-    let user_guess = let_user_guess(); //let the user type in the letters
-    let comparison_results = compare_user_guess(&user_guess, &correct_word);
-    show_colorful_result(&user_guess, &comparison_results);
-    
+    let file_words = get_file_contents(filename);
+    let correct_word = get_word(&file_words);
+    let mut guesses = 6;
+    let mut user_guess = String::new();
+    while guesses > 0 && user_guess != correct_word {
+        user_guess = let_user_guess(&file_words); //let the user type in the letters
+        let comparison_results = compare_user_guess(&user_guess, &correct_word);
+        show_colorful_result(&user_guess, &comparison_results);
+        guesses -= 1;
+    }
+    if user_guess != correct_word {
+        println!("The correct word was '{}'", correct_word);
+    }
+    else {
+        println!("You got it!");
+    }
 }
 
 fn print_help() {
@@ -37,7 +47,6 @@ fn print_help() {
 fn show_colorful_result(user_guess : &String, results : &[char; 5]) {
     let guess_letters : Vec<char> = user_guess.chars().collect();
     for idx in 0..5 {
-        let mut result = String::new();
         if results[idx] == 'c' {print!("{}", guess_letters[idx].to_string().green());}
         else if results[idx] == 'm' {print!("{}", guess_letters[idx].to_string().white());}
         else {print!("{}", guess_letters[idx].to_string().red());}
@@ -48,8 +57,7 @@ fn show_colorful_result(user_guess : &String, results : &[char; 5]) {
 }
 
 // fetch word from file
-fn get_word(filename:String) -> String {
-    let file_contents = get_file_contents(filename);
+fn get_word(file_contents : &Vec<String>) -> String {
     let mut random_generator = rand::thread_rng();
     let rand_word_idx = random_generator.gen::<usize>()%file_contents.len();
     let word : & String = &file_contents[rand_word_idx];
@@ -60,7 +68,6 @@ fn get_file_contents(filename:String) -> Vec<String> {
     let contents = fs::read_to_string(filename)
                     .expect("File error, could not fetch file contents");
     let mut words : Vec<String> = Vec::new();
-    
     for l in contents.lines() {
         words.push(l.to_string());
     }
@@ -113,7 +120,7 @@ fn let_user_guess(guess:String, word:String) -> [char; 5]{
 //TODO reimplement hashmap 
 
 // returns the string containing the user's guess
-fn let_user_guess() -> String {
+fn let_user_guess(file_contents : &Vec<String>) -> String {
     let mut x = String::new(); 
     while x.len() < 5 {
         let letter = let_user_type_letter();
@@ -130,7 +137,10 @@ fn let_user_guess() -> String {
         io::stdout().flush().unwrap();
         print!("\r{}", x);
         io::stdout().flush().unwrap();
- 
+    }
+    if !file_contents.contains(&x) {
+        println!("\r{} is not in our dictionary. Please try another word.", x);
+        return let_user_guess(file_contents)
     }
     x
 }
