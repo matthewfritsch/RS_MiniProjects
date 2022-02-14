@@ -1,2 +1,4 @@
 .gitignore
 */target
+
+3.\ Weatherfetch/src/weatherapi_key.txt
