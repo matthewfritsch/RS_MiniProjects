@@ -1,3 +1,3 @@
 Just some short projects in Rust while I learn the nuances of the language.
 
-All future important Rust projects will be given their own repositories.
+Each future project will have a README containing the crates/technologies used. Ideally each README will contain learned concepts.
