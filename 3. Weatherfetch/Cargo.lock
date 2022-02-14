@@ -3,14 +3,6 @@
 version = 3
 
 [[package]]
-name = "Weatherfetch"
-version = "0.1.0"
-dependencies = [
- "reqwest",
- "tokio",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -924,6 +916,14 @@ name = "wasm-bindgen-shared"
 version = "0.2.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d958d035c4438e28c70e4321a2911302f10135ce78a9c7834c0cab4123d06a2"
+
+[[package]]
+name = "weatherfetch"
+version = "0.1.0"
+dependencies = [
+ "reqwest",
+ "tokio",
+]
 
 [[package]]
 name = "web-sys"
