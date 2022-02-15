@@ -1,2 +1,1 @@
-cargo build
-cargo run > current_output.txt
+cargo build && cargo run > current_output.txt
