@@ -55,23 +55,26 @@ struct Weatherdata {
 }
 
 fn main() {
-    //TODO -release-
+
+    //TODO -swap-in the below lines (3) for release-
     // let request_url = _get_request_url();
     // let result = _fetch_weather_data(request_url);
     // let result_string = result.unwrap();
-    //TODO -release-
-    //TODO -debug-
+
+    //TODO -swap-out the below line to end debug-
     let result_string = _read_last_output();
-    //TODO -debug-
+
     let _json_conversion = format_json(&result_string);
     println!("{}",&result_string);
 }
 
+//TODO remove underscore in function name for release
 fn _read_last_output() -> String {
     let api_file = "last_output.txt";
     fs::read_to_string(api_file).expect("File could not be accessed.")
 }
 
+//TODO remove underscore in function name for release
 fn _get_request_url() -> String {
     let req_prefix = "https://api.weatherapi.com/v1/current.json?key=";
     let api_key = _fetch_api_key();
@@ -87,11 +90,13 @@ fn _get_request_url() -> String {
     request_url
 }
 
+//TODO remove underscore in function name for release
 fn _fetch_weather_data(req_url : String) -> Result<String, reqwest::Error> {
     let response = reqwest::blocking::get(req_url)?.text()?;
     Ok(response)
 }
 
+//TODO remove underscore in function name for release
 fn _fetch_api_key() -> String {
     let api_file = "weatherapi_key.txt";
     fs::read_to_string(api_file).expect("File could not be accessed.")
@@ -103,7 +108,6 @@ fn format_json(json : &String) -> Weatherdata {
 }
 
 /*
-fn determine_user_location() {}
-fn manage_user_settings() {}
-fn print_ascii() {}
+fn initial_setup() {}
+fn choose_ascii() {}
 */
