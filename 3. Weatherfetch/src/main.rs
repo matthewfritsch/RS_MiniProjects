@@ -1,12 +1,15 @@
-// use serde_json::{Result, Value};
+use serde_json;
+use serde::{Deserialize, Serialize};
 use std::fs;
 
-
 fn main() {
+
     let request_url = get_request_url();
     let result = fetch_weather_data(request_url);
-    // let json_conversion = format_json(result.unwrap());
-    println!("{}",result.unwrap());
+    let result_string = result.unwrap();
+
+    let _json_conversion = format_json(&result_string);
+    println!("{}",&result_string);
 }
 
 fn get_request_url() -> String {
@@ -26,8 +29,6 @@ fn get_request_url() -> String {
 
 fn fetch_weather_data(req_url : String) -> Result<String, reqwest::Error> {
     let response = reqwest::blocking::get(req_url)?.text()?;
-
-    // println!("{:?}", response.text().await?);
     Ok(response)
 }
 
@@ -35,10 +36,10 @@ fn fetch_api_key() -> String {
     let api_file = "weatherapi_key.txt";
     fs::read_to_string(api_file).expect("File could not be accessed.")
 }
-// fn format_json(json : String) ->  {
-//     let fixed_json = serde_json::from_str(json);
-//     fixed_json
-// }
+fn format_json(json : &String) -> Weatherdata {
+    // let weather : Weatherdata = serde_json::from_str(json.as_str()).unwrap();
+    // weather
+}
 
 /*
 fn determine_user_location() {}
