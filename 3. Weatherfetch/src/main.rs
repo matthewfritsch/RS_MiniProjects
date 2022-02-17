@@ -1,6 +1,7 @@
 use serde_json;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::cmp;
 
 //TODO test untyped JSON values to eliminate huge struct definitions
 #[derive(Serialize, Deserialize)]
@@ -62,16 +63,22 @@ fn main() {
     // let result_string = result.unwrap();
 
     //TODO -swap-out the below line to end debug-
-    let result_string = _read_last_output();
+    // let result_string = _read_last_output();
 
-    let _json_conversion = format_json(&result_string);
-    println!("{}",&result_string);
+    // let _json_conversion = format_json(&result_string);
+    // println!("{}",&result_string);
+    let art = _read_from_file("ascii_art/sun.txt".to_string());
+    let s = get_fetch_text(&art, &"a\nb c d\ne f\ng".to_string());
 }
 
 //TODO remove underscore in function name for release
 fn _read_last_output() -> String {
     let api_file = "last_output.txt";
     fs::read_to_string(api_file).expect("File could not be accessed.")
+}
+
+fn _read_from_file(filename : String) -> String {
+    fs::read_to_string(filename).expect("File could not be accessed.")
 }
 
 //TODO remove underscore in function name for release
@@ -105,6 +112,34 @@ fn _fetch_api_key() -> String {
 fn format_json(json : &String) -> Weatherdata {
     let weather : Weatherdata = serde_json::from_str(json.as_str()).unwrap();
     weather
+}
+
+fn get_fetch_text(ascii:&String, weather_text:&String) -> String {
+    let mut to_return = String::new();
+    let mut ascii_vec : Vec<String> = Vec::new();
+    let mut weather_vec : Vec<String> = Vec::new();
+
+    for line in ascii.lines() {
+        ascii_vec.push(line.to_string());
+    }
+    for line in weather_text.lines() {
+        weather_vec.push(line.to_string());
+    }
+
+    let mut ascii_iter = ascii_vec.iter();
+    let mut weather_iter = weather_vec.iter();
+
+    loop {
+        match (ascii_iter.next(), weather_iter.next()) {
+            (Some(x), Some(y)) => to_return.push_str(format!("{}{}\n", x, y).as_str()),
+            (Some(x), None) => to_return.push_str(format!("{}\n", x).as_str()),
+            (None, Some(y)) => to_return.push_str(format!("{}\n", y).as_str()),
+            (None, None) => break,
+        }
+    }
+
+    println!("{}", to_return);
+    to_return
 }
 
 /*
