@@ -107,6 +107,34 @@ fn format_json(json : &String) -> Weatherdata {
     weather
 }
 
+fn get_fetch_text(ascii:&String, weather_text:&String) -> String {
+    let mut to_return = String::new();
+    let mut ascii_vec : Vec<String> = Vec::new();
+    let mut weather_vec : Vec<String> = Vec::new();
+
+    for line in ascii.lines() {
+        ascii_vec.push(line.to_string());
+    }
+    for line in weather_text.lines() {
+        weather_vec.push(line.to_string());
+    }
+
+    let mut ascii_iter = ascii_vec.iter();
+    let mut weather_iter = weather_vec.iter();
+
+    loop {
+        match (ascii_iter.next(), weather_iter.next()) {
+            (Some(x), Some(y)) => to_return.push_str(format!("{}{}\n", x, y).as_str()),
+            (Some(x), None) => to_return.push_str(format!("{}\n", x).as_str()),
+            (None, Some(y)) => to_return.push_str(format!("{}\n", y).as_str()),
+            (None, None) => break,
+        }
+    }
+
+    println!("{}", to_return);
+    to_return
+}
+
 /*
 fn initial_setup() {}
 fn choose_ascii() {}

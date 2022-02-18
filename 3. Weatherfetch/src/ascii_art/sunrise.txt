@@ -6,11 +6,11 @@
    --_     #88888888888888888#     _--   
        *--#0000000000000000000#--*       
          #888888888888888888888#         
-         #000000000000000000000#         
-      _*--#8888888888888888888#--*_      
-   --      #00000000000000000#      --   
-             #88888888888888#            
-           /    #########    \           
-          /         |         \          
-                    |                    
+    ___=========================___      
+___/ggggggggggggggggggggggggggggggg\___  
+ggggggggggggggggggggggggggggggggggggggg  
+ggggggggggggggggggggggggggggggggggggggg  
+                                         
+                                         
+                                         
                                          
